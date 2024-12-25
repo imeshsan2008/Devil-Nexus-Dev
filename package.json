@@ -2,7 +2,7 @@
   "name": "button-bot-test",
   "version": "1.0.0",
   "main": "bot.js",
-  "scripts": { "start": "npx pm2 start bot.js && npx pm2 logs bot.js" },
+  "scripts": { "start": "node bot.js" },
   "keywords": [],
   "author": "VENOM DEVIL",
   "license": "ISC",
