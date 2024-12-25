@@ -1,0 +1,7 @@
+{
+  "featureEnabled": "true",
+  "autodetectlink": "true",
+  "fbdownload": "true",
+  "perfix": ".",
+  "badword": "true"
+}

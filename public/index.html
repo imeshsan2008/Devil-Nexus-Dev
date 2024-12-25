@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bot Settings</title>
+    <link rel="stylesheet" href="style/style.css">
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <div class="container">
+        <h1>DEVIL NEXUS's Settings</h1><br>
+
+        <center>  <h2  class="status">FB,YT,IG link auto detect</h2></center>      
+
+        <div class="switch-container">
+            <label class="switch">
+                <input type="checkbox" id="autodetectlink" onchange="switchfunc(this)">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <br>
+        <center>        <h2 id="badword-status" class="status">Bad word</h2> 
+        </center>   
+        <div class="switch-container">
+            <label class="switch">
+                <input type="checkbox" id="badword" onchange="switchfunc(this)">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <br>
+        <center><h3>DEVELOPMENT BY VENOM DEVIL</h3></center>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script>
+        function switchfunc(element) {
+            const switchId = element.id;
+            const switchEl = document.querySelector(`#${switchId}`);
+            let ischecked;
+
+            if (switchEl.checked) {
+                ischecked = true;
+            } else {
+                ischecked = false;
+            }
+
+            switch (switchId) {
+                case 'autodetectlink':
+                    autodetectlink(ischecked, switchId);
+                    break;
+
+                case 'badword':
+                    autodetectlink(ischecked, switchId);
+                    break;        
+            }
+        }
+
+        async function autodetectlink(ischecked, switchId) {
+            const endpoint = `/db/settings/setsettings?${switchId}=${ischecked}`;
+            console.log(endpoint);
+            
+            try {
+                const response = await fetch(endpoint, { method: 'POST' });
+                const data = await response.json();
+                
+                if (data.success) {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: `${switchId} updated successfully`,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                } else {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'error',
+                        title: `Error updating ${switchId}`,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+
+                await checkSettings();
+            } catch (error) {
+                console.error('Error updating settings:', error);
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'error',
+                    title: 'Error updating settings',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        }
+
+        async function checkSettings() {
+            try {
+                const response = await fetch('/db/settings/settings.json');
+                const data = await response.json();
+                const final_data = data.currentSettings;
+
+                for (const setting in final_data) {
+                    const switchId = setting;
+                    const switch_query = document.getElementById(switchId);
+
+                    if (switch_query) {
+                        if (final_data[setting] === "true") {
+                            switch_query.checked = true;
+                                           } else {
+                            switch_query.checked = false;
+                   
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching settings:', error);
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'error',
+                    title: 'Error fetching settings',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        }
+
+        window.onload = checkSettings;
+    </script>
+
+</body>
+</html>
