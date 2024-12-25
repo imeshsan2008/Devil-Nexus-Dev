@@ -2,10 +2,7 @@
   "name": "button-bot-test",
   "version": "1.0.0",
   "main": "bot.js",
-  "scripts": {
-    "start": " pm2 start bot  && pm2 logs bot",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "scripts": { "start": "npx pm2 start bot.js && npx pm2 logs bot.js" },
   "keywords": [],
   "author": "VENOM DEVIL",
   "license": "ISC",
