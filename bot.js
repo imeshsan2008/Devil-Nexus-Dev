@@ -1,28 +1,27 @@
 const express = require("express");
 const figlet = require('figlet');
 
-const fs = require("fs");
+const  fs = require("fs");
 const path = require("path");
 const makeWASocket = require("@whiskeysockets/baileys").default;
 const { useMultiFileAuthState } = require("@whiskeysockets/baileys");
 const qrcode = require("qrcode-terminal");
+let botStartTime = Date.now(); // Record the time the bot was started
+
+
 const {
   fbcmd,
   sendReactMessage,
   sendQuotedMessage,bot_name
 } = require("./include/func.js");
 const {
-  handleVideoReply,
-  downloadRequests,
-  handleVideoQuality,
+
   handleResponse,
 } = require("./include/files/fb.js");
 
 const sessionId = "session1000"; // Session unique ID
 const app = express();
 const PORT = 8000;
-const axios = require("axios");
-const { log } = require("console");
 
 // Middleware to parse JSON
 app.use(express.json());
@@ -97,6 +96,7 @@ app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
 
+ 
 // Function to start the WhatsApp bot
 async function startBot(sessionId) {
   console.log(`Starting bot for session: ${sessionId}...`);
@@ -148,7 +148,21 @@ async function startBot(sessionId) {
       // Ignore broadcast or newsletter messages
       if (from.includes("status@broadcast") || from.includes("@newsletter")) {
         return;
-      }
+      }      const ISallow = getSettings();
+
+
+      if (text.toLowerCase().startsWith(`${ISallow.perfix}alive`)) {
+        const uptime = Date.now() - botStartTime; // Calculate total uptime in milliseconds
+        
+        const hours = Math.floor(uptime / 3600000); // Calculate hours
+        const minutes = Math.floor((uptime % 3600000) / 60000); // Calculate remaining minutes
+        const seconds = Math.floor((uptime % 60000) / 1000); // Calculate remaining seconds
+        
+        const statusMessage = `Bot is online! ✅\n${hours} hours, ${minutes} minutes, ${seconds} seconds`;
+        await sendQuotedMessage(from, statusMessage, msg, sock);
+        sendReactMessage(from, "👋", msg, sock);
+    }
+    
       const currentDate = new Date();
       const isJanuary1 = currentDate.getDate() === 1 && currentDate.getMonth() === 0; // Check if it's Jan 1 (your birthday)
       
@@ -161,7 +175,7 @@ async function startBot(sessionId) {
           text.toLowerCase().includes("celebrate")) // New keyword
       ) {
         if (isJanuary1) {
-          const replyText = `🎉 Thank you, ${pushName}! I really appreciate it. 😊 \n\n${bot_name}`;
+          const replyText = `🎉 Thank you, ${pushName}! I really appreciate it. 😊`;
           
           await sendQuotedMessage(from, replyText, msg, sock);
           sendReactMessage(from, "🎉", msg, sock);
@@ -199,7 +213,6 @@ async function startBot(sessionId) {
 
       console.log(`Received message from ${from}: ${text}`);
 
-      const ISallow = getSettings();
 
       // Handle Facebook video download command
       if (
