@@ -164,7 +164,7 @@ async function startBot(sessionId) {
     }
     
       const currentDate = new Date();
-      const isJanuary1 = currentDate.getDate() === 1 && currentDate.getMonth() === 0; // Check if it's Jan 1 (your birthday)
+      const isJanuary1 = currentDate.getDate() ===2 && currentDate.getMonth() === 0; // Check if it's Jan 1 (your birthday)
       
       if (
         msg.key.fromMe === false &&
