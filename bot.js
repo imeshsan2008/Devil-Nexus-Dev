@@ -175,16 +175,16 @@ async function startBot(sessionId) {
           text.toLowerCase().includes("celebrate")) // New keyword
       ) {
         if (isJanuary1) {
-          const replyText = `🎉 Thank you, ${pushName}! I really appreciate it. 😊`;
+       const replyText = `❌ Today is not my birthday, but thank you for the kind words! 😊`;
+          await sendQuotedMessage(from, replyText, msg, sock);
+          sendReactMessage(from, "❌", msg, sock);
+      
+          return;  
+        } else {
+           const replyText = `🎉 Thank you, ${pushName}! I really appreciate it. 😊`;
           
           await sendQuotedMessage(from, replyText, msg, sock);
           sendReactMessage(from, "🎉", msg, sock);
-      
-          return;
-        } else {
-          const replyText = `❌ Today is not my birthday, but thank you for the kind words! 😊`;
-          await sendQuotedMessage(from, replyText, msg, sock);
-          sendReactMessage(from, "❌", msg, sock);
       
           return;
         }
