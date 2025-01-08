@@ -1,0 +1,6 @@
+{
+    "watch": ["bot.js", "src/"],
+    "ext": "js,json",
+    "ignore": ["node_modules/", "*.log"]
+  }
+  

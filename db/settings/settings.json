@@ -1,7 +1,8 @@
 {
   "featureEnabled": "true",
   "autodetectlink": "true",
+  "tiktokdownload": "true",
   "fbdownload": "true",
   "perfix": ".",
-  "badword": "true"
+  "bot_name": "BOT NEXUS"
 }

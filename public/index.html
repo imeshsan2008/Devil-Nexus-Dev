@@ -12,8 +12,9 @@
 
     <div class="container">
         <h1>DEVIL NEXUS's Settings</h1><br>
-
-        <center>  <h2  class="status">FB,YT,IG link auto detect</h2></center>      
+<h4 id="pushname"></h4>
+ <h4 id="botnumber"></h4>
+       <center>  <h2  class="status">FB,YT,IG link auto detect</h2></center>      
 
         <div class="switch-container">
             <label class="switch">
@@ -22,21 +23,84 @@
             </label>
         </div>
         <br>
-        <center>        <h2 id="badword-status" class="status">Bad word</h2> 
-        </center>   
+        
+        <center>  <h2  class="status">Tiktok</h2></center>      
+
         <div class="switch-container">
             <label class="switch">
-                <input type="checkbox" id="badword" onchange="switchfunc(this)">
+                <input type="checkbox" id="tiktokdownload" onchange="switchfunc(this)">
                 <span class="slider"></span>
             </label>
         </div>
         <br>
+        <center>        <h2 id="badword-status" class="status">Fb Download</h2> 
+        </center>   
+        <div class="switch-container">
+            <label class="switch">
+                <input type="checkbox" id="fbdownload" onchange="switchfunc(this)">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <br>   <center>        <h2 id="fbdownload-status" class="status">Bot Name</h2> 
+        </center>   
+        <div class="switch-container">
+            <input type="text" placeholder="Enter Your Bot Name" id="bot_name" name="bot_name" style="text-transform:uppercase" oninput="inputfunc(this)"   required>
+           </div><br>  <center>        <h2 id="fbdownload-status" class="status">Perfix</h2> 
+           </center>   <div class="switch-container">
+            <input type="text" placeholder="Enter Your Bot perfix" id="perfix" name="perfix" oninput="inputfunc(this)" maxlength="1" required>
+           </div><br>
         <center><h3>DEVELOPMENT BY VENOM DEVIL</h3></center>
-
+<!-- Removed unused button -->
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <script>
+function name() {
+    document.getElementById("bot_name").click();
+}
+async function inputfunc(element) {
+const inputId = element.id;
+const inputValue = element.value;
+
+    const endpoint = `/db/settings/setsettings?${inputId}=${inputValue}`;
+     
+    try {
+                const response = await fetch(endpoint, { method: 'post' });
+                const data = await response.json();
+                
+                if (data.success) {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: `${inputId} updated successfully`,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                } else {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'error',
+                        title: `Error updating ${inputId}`,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+
+                // await checkSettings();
+            } catch (error) {
+                console.error('Error updating settings:', error);
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'error',
+                    title: 'Error updating settings',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+}
         function switchfunc(element) {
             const switchId = element.id;
             const switchEl = document.querySelector(`#${switchId}`);
@@ -50,18 +114,26 @@
 
             switch (switchId) {
                 case 'autodetectlink':
-                    autodetectlink(ischecked, switchId);
+                    changeval(ischecked, switchId);
                     break;
 
-                case 'badword':
-                    autodetectlink(ischecked, switchId);
-                    break;        
+                        case 'badword':
+                        changeval(ischecked, switchId);
+                        break;
+                    case 'fbdownload':
+                    changeval(ischecked, switchId);
+                    break;    
+                case 'tiktokdownload':
+                    changeval(ischecked, switchId);
+                    break;             
+                    
+                    
             }
         }
 
-        async function autodetectlink(ischecked, switchId) {
+        async function changeval(ischecked, switchId) {
             const endpoint = `/db/settings/setsettings?${switchId}=${ischecked}`;
-            console.log(endpoint);
+            // console.log(endpoint);
             
             try {
                 const response = await fetch(endpoint, { method: 'POST' });
@@ -100,7 +172,27 @@
                 });
             }
         }
-
+        async function checkSettingss() {
+            try {
+                const response = await fetch('/db/settings/getsettings');
+                const data = await response.json();
+                const usernumber = data.usernumber;
+                const userpushname = data.usersPushName;
+            document.getElementById('botnumber').innerHTML = `Your Number: ${usernumber}`;
+document.getElementById('pushname').innerHTML = `Your Pushname: ${userpushname}`;            
+            } catch (error) {
+                console.error('Error fetching settings:', error);
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'error',
+                    title: 'Error! Please try again',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        }
+        checkSettingss()
         async function checkSettings() {
             try {
                 const response = await fetch('/db/settings/settings.json');
@@ -110,6 +202,9 @@
                 for (const setting in final_data) {
                     const switchId = setting;
                     const switch_query = document.getElementById(switchId);
+                    const bot_name_query = document.getElementById('bot_name');
+                    const bot_perfix = document.getElementById('perfix');
+                    // const tiktokdownload = document.getElementById('tiktokdownload');
 
                     if (switch_query) {
                         if (final_data[setting] === "true") {
@@ -118,8 +213,16 @@
                             switch_query.checked = false;
                    
                         }
+                    }if (bot_name_query) {
+                        bot_name_query.value = final_data.bot_name;
+
+                        
                     }
-                }
+    if (bot_perfix) {
+                        bot_perfix.value = final_data.perfix;
+
+                        
+                    }            }
             } catch (error) {
                 console.error('Error fetching settings:', error);
                 Swal.fire({
