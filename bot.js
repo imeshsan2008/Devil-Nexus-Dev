@@ -10,7 +10,7 @@ let botStartTime = Date.now(); // Record the time the bot was started
 const { facebook, map, sendquality, selectquality, sendVideo } = require("./commands/fb.js"); // Import functions from fb.js
 const { tiktok, sendsound, sendreq, selectreq, sendtiktok } = require("./commands/tiktok.js"); // Import functions from tiktok.js
 
-const sessionId = "session01000"; // Session unique ID
+const sessionId = "session1000"; // Session unique ID
 const app = express(); // Create an express application
 const PORT = process.env.PORT || 8000; // You can change this to any port you prefer
 
