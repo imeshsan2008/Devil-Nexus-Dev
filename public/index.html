@@ -46,9 +46,16 @@
         <div class="switch-container">
             <input type="text" placeholder="Enter Your Bot Name" id="bot_name" name="bot_name" style="text-transform:uppercase" oninput="inputfunc(this)"   required>
            </div><br>  <center>        <h2 id="fbdownload-status" class="status">Perfix</h2> 
-           </center>   <div class="switch-container">
+           </center>   
+           <div class="switch-container">
             <input type="text" placeholder="Enter Your Bot perfix" id="perfix" name="perfix" oninput="inputfunc(this)" maxlength="1" required>
            </div><br>
+           <center>        <h2 id="fbdownload-status" class="status">Venom Devil API sites api key <a href="https://venom-devils-api.koyeb.app/" target="_blank" rel="noopener noreferrer">https://venom-devils-api.koyeb.app/</a></h2>
+           </center>
+        <div class="switch-container">
+            <input type="text" placeholder="Enter venom Devil API sites api key" id="api_key" name="api_key" oninput="inputfunc(this)" maxlength="10" required>
+           </div>  <br>
+              
         <center><h3>DEVELOPMENT BY VENOM DEVIL</h3></center>
 <!-- Removed unused button -->
     </div>
@@ -204,6 +211,8 @@ document.getElementById('pushname').innerHTML = `Your Pushname: ${userpushname}`
                     const switch_query = document.getElementById(switchId);
                     const bot_name_query = document.getElementById('bot_name');
                     const bot_perfix = document.getElementById('perfix');
+                    const api_key = document.getElementById('api_key');
+
                     // const tiktokdownload = document.getElementById('tiktokdownload');
 
                     if (switch_query) {
@@ -222,7 +231,15 @@ document.getElementById('pushname').innerHTML = `Your Pushname: ${userpushname}`
                         bot_perfix.value = final_data.perfix;
 
                         
-                    }            }
+                    }    
+      if (api_key) {
+                        api_key.value = final_data.api_key;
+
+                        
+                    }               
+                
+                
+                }
             } catch (error) {
                 console.error('Error fetching settings:', error);
                 Swal.fire({

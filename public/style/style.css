@@ -2,7 +2,7 @@
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
-    color: #333;
+    color: #ffffff;
     margin: 0;
     padding: 0;
 }
@@ -18,7 +18,7 @@ body {
 
 h1 {
     text-align: center;
-    color: #333;
+    color: #ffffff;
 }
 
 /* Styling for setting items */
@@ -31,17 +31,17 @@ h1 {
 
 .setting-item label {
     font-size: 1.2em;
-    color: #555;
+    color: #ffffff;
 }
 
 #autodetect-status {
     font-size: 1em;
-    color: #888;
+    color: #ffffff;
 }
 
 .status {
     margin-top: 10px;
-    color: #888;
+    color: #ffffff;
 }
 
 /* Switch container styling */
@@ -94,3 +94,257 @@ input:checked + .slider {
 input:checked + .slider:before {
     transform: translateX(26px);
 }
+     * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            margin-bottom: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.02);
+        }
+
+        .title {
+            color: #25D366;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .steps {
+            text-align: left;
+            margin: 25px 0;
+        }
+
+        .step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 12px;
+            background: rgba(37, 211, 102, 0.05);
+            border-left: 4px solid #25D366;
+            transition: all 0.3s ease;
+        }
+
+        .step:hover {
+            background: rgba(37, 211, 102, 0.1);
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.2);
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+            font-weight: bold;
+            font-size: 1.1rem;
+            box-shadow: 0 3px 10px rgba(37, 211, 102, 0.3);
+        }
+
+        .step-content {
+            flex: 1;
+            line-height: 1.6;
+            font-size: 1rem;
+            color: #ffffff;
+        }
+
+        .step-content strong {
+            color: #25D366;
+            font-weight: 600;
+        }
+
+        .step-content a {
+            color: #25D366;
+            text-decoration: none;
+            font-weight: bold;
+            border-bottom: 1px solid transparent;
+            transition: border-bottom 0.3s ease;
+        }
+
+        .step-content a:hover {
+            border-bottom: 1px solid #25D366;
+        }
+
+        .support {
+            margin-top: 40px;
+            padding: 20px;
+            text-align: center;
+            color: #ffffff;
+            font-size: 0.9rem;
+            background: rgba(0,0,0,0.02);
+            border-radius: 12px;
+            border: 1px dashed rgba(0,0,0,0.1);
+        }
+
+        .whatsapp-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+
+            .container {
+                padding: 25px 20px;
+                border-radius: 15px;
+            }
+
+            .title {
+                font-size: 1.6rem;
+                margin-bottom: 25px;
+            }
+
+            .logo {
+                max-width: 350px;
+                margin-bottom: 25px;
+            }
+
+            .step {
+                padding: 12px;
+                margin-bottom: 15px;
+            }
+
+            .step-number {
+                width: 30px;
+                height: 30px;
+                font-size: 1rem;
+                margin-right: 12px;
+            }
+
+            .step-content {
+                font-size: 0.95rem;
+            }
+
+            .support {
+                margin-top: 30px;
+                padding: 15px;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px 15px;
+            }
+
+            .title {
+                font-size: 1.4rem;
+            }
+
+            .logo {
+                max-width: 300px;
+            }
+
+            .step {
+                flex-direction: column;
+                text-align: center;
+                padding: 15px;
+            }
+
+            .step-number {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+
+            .step-content {
+                text-align: left;
+            }
+        }
+
+        @media (max-width: 360px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .title {
+                font-size: 1.3rem;
+            }
+
+            .logo {
+                max-width: 250px;
+            }
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: linear-gradient(135deg, #333 0%, #3498db 100%);
+            }
+
+            .container {
+                background: rgba(44, 62, 80, 0.95);
+                color: #ecf0f1;
+            }
+
+            .step-content {
+                color: #ecf0f1;
+            }
+
+            .support {
+                color: #bdc3c7;
+                background: rgba(255,255,255,0.05);
+            }
+        }

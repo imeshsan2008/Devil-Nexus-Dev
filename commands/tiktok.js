@@ -47,7 +47,7 @@ Please reply with '1' to confirm or '2' to cancel.:
 1️⃣ *YES*
 2️⃣ *NO*
 
-${bot_name} | TIKTOK DOWNLOADER`,
+> ${bot_name} | TIKTOK DOWNLOADER`,
     }, { quoted: msg });
 
     const messageId = message.key.id;
@@ -63,7 +63,7 @@ Please reply with '1' to download the video or '2' to download the sound:
 1️⃣ *VIDEO*
 2️⃣ *ORIGINAL SOUND*
 
-${bot_name} | TIKTOK DOWNLOADER`,
+> ${bot_name} | TIKTOK DOWNLOADER`,
     }, { quoted: msg });
 
     const messageId = message.key.id;
