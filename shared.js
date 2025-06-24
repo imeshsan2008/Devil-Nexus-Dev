@@ -3,6 +3,7 @@ const path = require("path");
 const figlet = require('figlet');
 
 const settingsPath = path.join(__dirname, "db/settings/settings.json");
+
 const usrdbPath = path.join(__dirname, "db/usr_db/contacts.json");
 
 

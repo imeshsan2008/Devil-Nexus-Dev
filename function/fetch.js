@@ -55,7 +55,7 @@ const sendQuotedMessage = async (from, message, msg, sock) => {
     try {
         await sock.sendMessage(
             from,
-            { text: `${message}\n\n> ${bot_name}` },
+            { text: `${message}\n> ${bot_name}` },
             { quoted: msg }
         );
         console.log("Message sent to:", from);

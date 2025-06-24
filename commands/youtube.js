@@ -17,15 +17,18 @@ async function fetchBuffer(url, headers = {}) {
         return null;
     }
 }
-function again(params) {
-    
+function again(from, msg, sock, videoInfos) {
+
+    youtube(from, msg, sock, videoInfos);
+    return;
 }
 
 // Handle yt video command
 async function youtube(from, msg, sock, videoInfos) {
     if (!videoInfos) {
-        await sendReactMessage(from, "❌", msg, sock);
-        await sendQuotedMessage(from, "❌ Unable to fetch video info", msg, sock);
+        await sendReactMessage(from, "🔄", msg, sock);
+        again(from, msg, sock, videoInfos);
+        // await sendQuotedMessage(from, "❌ Unable to fetch video info", msg, sock);
         return;
     }
 
@@ -33,7 +36,6 @@ async function youtube(from, msg, sock, videoInfos) {
 
     let imageBuffer = await fetchBuffer(videoInfos.metadata.thumbnail);
     if (!imageBuffer) {
-        await sendReactMessage(from, "❌", msg, sock);
         // await sendQuotedMessage(from, "❌ Unable to fetch thumbnail image", msg, sock);
     
 imageBuffer = await fetchBuffer('https://imageplaceholder.net/600x400/eeeeee/131313?text=Error!');

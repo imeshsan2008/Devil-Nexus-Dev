@@ -4,7 +4,7 @@ const fs = require('fs');  // Regular fs for sync operations
 const cron = require("node-cron");
 
 const fsPromises = require('fs').promises;  // Make sure to use fs.promises
-const { getSettings, settingsPath,usrdbPath } = require("./shared.js"); // Import getSettings and settingsPath from shared.js
+const { getSettings, settingsPath,usrdbPath,blocked_jids_Path } = require("./shared.js"); // Import getSettings and settingsPath from shared.js
 const { getVideoInfo, sendReactMessage, sendQuotedMessage } = require("./function/fetch.js"); // Import functions from fetch.js
 // const { birthday_system } = require("./function/birthday.js"); // Import functions from fetch.js
 const QRCode = require('qrcode');
@@ -16,6 +16,8 @@ let botStartTime = Date.now(); // Record the time the bot was started
 const { facebook, map, sendquality, selectquality, sendVideo } = require("./commands/fb.js"); // Import functions from fb.js
 const { tiktok, sendsound, sendreq, selectreq, sendtiktok } = require("./commands/tiktok.js"); // Import functions from tiktok.js
 const { youtube, sendreqyt, selectqualityyt, sendyt, sendytmp3 } = require("./commands/youtube.js"); // Import functions from youtube.js
+const {  isBlocked, addBlockedJid, removeBlockedJid } = require("./commands/jid_block.js"); // Import functions from youtube.js
+
 
 const axios = require('axios');
 const { Readable } = require('stream');
@@ -40,6 +42,17 @@ app.get("/db/settings/settings.json", (req, res) => {
     res.status(500).json({ error: "Failed to read settings file" }); // Send error response
   }
 });
+// Endpoint to serve blocked_jids.json
+app.get("/db/usr_db/blocked_jids.json", (req, res) => {
+  try {
+    const blocked_jids = JSON.parse(fs.readFileSync(blocked_jids_Path, "utf8")); // Read and parse blocked_jids file
+    return res.status(200).json({ blocked_jids }); // Send blocked_jids as JSON response
+  } catch (err) {
+    console.error("Error reading blocked_jids file:", err); // Log error
+    res.status(500).json({ error: "Failed to read blocked_jids file" }); // Send error response
+  }
+});
+
 // Endpoint to serve settings.json
 app.get("/db/usr_db/contacts.json", (req, res) => {
   try {
@@ -315,7 +328,26 @@ if (!birthdayChecked) {
       const from = msg.key.remoteJid; // Get sender ID
       const text = msg.message.conversation || msg.message.extendedTextMessage?.text || ""; // Get message text
       const pushName = msg.pushName || "there"; // Fallback if pushName is not available
+      
+      const ISallow = getSettings(); // Get settings
+      const perfix = ISallow.perfix; // Get prefix
+      // console.log(isBlocked(from) === true && text.includes(perfix + "unbbot"));
+      // console.log(await isBlocked(from));
+      
+if (msg.key.fromMe === true &&  isBlocked(from) && text.includes( perfix + "unblockbot")) {
+  removeBlockedJid(from);
 
+  sendQuotedMessage(from, "Bot successfully Unblocked" +from, msg, sock);
+    sendReactMessage(from, "✅", msg, sock);
+
+  console.log("Message from unblocked user:", from);
+  return;
+}else
+
+if (isBlocked(from)) {
+  console.log("Message from blocked user:", from);
+  return;
+} 
       // Ignore broadcast or newsletter messages
       if (from.includes("status@broadcast") || from.includes("@newsletter")) {
         return;
@@ -327,8 +359,7 @@ if (text.includes("> BOT NEXUS")) {
   
 }
 
-      const ISallow = getSettings(); // Get settings
-      const perfix = ISallow.perfix; // Get prefix
+
       if (text.toLowerCase().startsWith('br')) {
           birthday_system(sock);
 
@@ -375,7 +406,26 @@ if (text.includes("> BOT NEXUS")) {
           return;
         }
       }
+      if (msg.key.fromMe === true && text.toLowerCase().startsWith(perfix + 'blockbot')) {
+  sendReactMessage(from, "✅", msg, sock);
+  sendQuotedMessage(from, `Bot successfully Blocked ${from}`, msg, sock);
+  addBlockedJid(from);
 
+
+
+      }
+  //    if (msg.key.fromMe === true && text.toLowerCase().startsWith(perfix + 'unbbot')) {
+
+  // sendReactMessage(from, "✅", msg, sock);
+  // sendQuotedMessage(from, `Bot successfully Unblocked ${jid}`, msg, sock);
+  // removeBlockedJid(from);
+
+
+
+  //     }      
+if (text.toLowerCase().startsWith(perfix + 'jid')) {
+ sendQuotedMessage(from, `${from}`, msg, sock);
+}
       
 // YouTube Download
 if (
