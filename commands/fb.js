@@ -7,6 +7,16 @@ const { bot_name } = require("../shared");
 
 const map = new Map();
 sendVideo
+
+// function again(from, msg, sock, videoInfos) {
+//       if (1 > 2) {
+
+//     facebook(from, msg, sock, videoInfos);
+    
+//     return;
+// }
+
+// }
 // Handle Facebook video command
 async function facebook(from, msg, sock, videoInfos) { 
 //    console.log(videoInfos);
@@ -48,16 +58,22 @@ ${bot_name} | FB DOWNLOADER`,
            // Set download request step
                 // downloadRequests.set(from, { mapData, step: '1' });
             } else {
+
                 throw new Error("Failed to fetch thumbnail image.");
             }
         } catch (error) {
+            // again(from, msg, sock, videoInfos)
+        // await sendReactMessage(from, "🔄", msg, sock);
             console.error("Error fetching or sending thumbnail:", error);
-            sendReactMessage(from, "❌", msg, sock);
-            sendQuotedMessage(from, "❌ Unable to fetch thumbnail image", msg, sock);
+            sendReactMessage(from, "❗", msg, sock);
+            // sendQuotedMessage(from, "❗ Unable to fetch thumbnail image", msg, sock);
         }
     } else {
-        sendReactMessage(from, "❌", msg, sock);
-        sendQuotedMessage(from, "❌ Unable to fetch video info", msg, sock);
+// again(from, msg, sock, videoInfos)
+        // await sendReactMessage(from, "🔄", msg, sock);
+
+        // sendReactMessage(from, "❗", msg, sock);
+        // sendQuotedMessage(from, "❗ Unable to fetch video info", msg, sock);
     }
 }
 sendquality = async (from, msg, sock) => {
@@ -137,8 +153,10 @@ async function sendVideo(from, msg, sock, videoUrl) {
         }
     } catch (error) {
         console.error("Error fetching or sending video:", error);
-        sendReactMessage(from, "❌", msg, sock);
-        sendQuotedMessage(from, "❌ Unable to fetch video", msg, sock);
+        // again(from, msg, sock, videoInfos)
+        // await sendReactMessage(from, "🔄", msg, sock);
+        sendReactMessage(from, "❗", msg, sock);
+        // sendQuotedMessage(from, "❗ Unable to fetch video", msg, sock);
     }
 }
 

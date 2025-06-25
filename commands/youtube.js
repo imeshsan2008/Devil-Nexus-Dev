@@ -17,18 +17,23 @@ async function fetchBuffer(url, headers = {}) {
         return null;
     }
 }
-function again(from, msg, sock, videoInfos) {
 
-    youtube(from, msg, sock, videoInfos);
-    return;
+// Retry function with retry flag
+function again(from, msg, sock, videoInfos, retried = false) {
+    youtube(from, msg, sock, videoInfos, retried);
 }
 
 // Handle yt video command
-async function youtube(from, msg, sock, videoInfos) {
+async function youtube(from, msg, sock, videoInfos, retried = false) {
     if (!videoInfos) {
         await sendReactMessage(from, "🔄", msg, sock);
-        again(from, msg, sock, videoInfos);
-        // await sendQuotedMessage(from, "❌ Unable to fetch video info", msg, sock);
+        if (!retried) {
+            // Retry only once
+            again(from, msg, sock, videoInfos, true);
+        } else {
+            // After one retry, send failure message
+            await sendQuotedMessage(from, "❗ Unable to fetch video info. Please try again later.", msg, sock);
+        }
         return;
     }
 
@@ -36,10 +41,7 @@ async function youtube(from, msg, sock, videoInfos) {
 
     let imageBuffer = await fetchBuffer(videoInfos.metadata.thumbnail);
     if (!imageBuffer) {
-        // await sendQuotedMessage(from, "❌ Unable to fetch thumbnail image", msg, sock);
-    
-imageBuffer = await fetchBuffer('https://imageplaceholder.net/600x400/eeeeee/131313?text=Error!');
-
+        imageBuffer = await fetchBuffer('https://imageplaceholder.net/600x400/eeeeee/131313?text=Error!');
     }
 
     const message = await sock.sendMessage(from, {
@@ -60,7 +62,7 @@ Please reply with '1' to confirm or '2' to cancel.:
     }, { quoted: msg });
 
     const messageId = message.key.id;
-    map.set(from, { step: 1, video: videoInfos.available,audio: videoInfos.audio,  msg: messageId, platform: 'yt' });
+    map.set(from, { step: 1, video: videoInfos.available, audio: videoInfos.audio, msg: messageId, platform: 'yt' });
 }
 
 async function sendreqyt(from, msg, sock) {
@@ -72,15 +74,14 @@ Please reply with '1' to download the video or '2' to download the sound:
 Video:
 
 1️⃣ *360p*
-2️⃣ *720p*
-3️⃣ *480p*
-4️⃣ *720p*
-5️⃣ *1080p*
+2️⃣ *480p*
+3️⃣ *720p*
+4️⃣ *1080p*
 
 Audio:(Under Development!)
 
-6️⃣ *128kbps*
-7️⃣ *320kbps*
+5️⃣ *128kbps*
+6️⃣ *320kbps*
 
 
 
@@ -94,7 +95,7 @@ ${bot_name} | YT DOWNLOADER`,
         data.msg = messageId;
         map.set(from, data);
     }
-}1
+}
 
 async function selectqualityyt(from, msg, sock, text) {
     const quotedMessageContext = msg.message?.extendedTextMessage?.contextInfo;
@@ -105,61 +106,58 @@ async function selectqualityyt(from, msg, sock, text) {
         if (map.get(from).step === 1) {
             await sendreqyt(from, msg, sock);
         } else if (map.get(from).step === 2) {
-const videoArr = map.get(from).video;
-const audioArr = map.get(from).audio;
+            const videoArr = map.get(from).video;
+            const audioArr = map.get(from).audio;
 
-// Match quality options to numbers
-const qualityMap = {
-  1: '360p',
-  2: '720p',
-  3: '480p',
-  4: '720p',
-  5: '1080p',
-  6: '128kbps',
-  7: '320kbps'
-};
+            // Match quality options to numbers
+            const qualityMap = {
+                1: '360p',
+                2: '480p',
+                3: '720p',
+                4: '1080p',
+                5: '128kbps',
+                6: '320kbps'
+            };
 
-// Extract the number from the message
-const selected = parseInt(text.trim());
+            // Extract the number from the message
+            const selected = parseInt(text.trim());
 
-// Get corresponding quality
-const selectedQuality = qualityMap[selected];
+            // Get corresponding quality
+            const selectedQuality = qualityMap[selected];
 
-if (!selectedQuality) {
-  await sendQuotedMessage(from, "❌ Invalid selection.");
-  return;
-}
+            if (!selectedQuality) {
+                await sendQuotedMessage(from, "❗ Invalid selection.");
+                return;
+            }
 
-let stream;
+            let stream;
+            let filename;
 
-// Check if it's audio or video
-if (selected <= 5) {
-  stream = videoArr.find(v => v.quality === selectedQuality);
-} else {
-  stream = audioArr.find(a => a.quality === selectedQuality);
-filename = videoArr.find(v => v.quality === selectedQuality).filename;
+            // Check if it's audio or video
+            if (selected <= 5) {
+                stream = videoArr.find(v => v.quality === selectedQuality);
+            } else {
+                stream = audioArr.find(a => a.quality === selectedQuality);
+                // For audio, try to get filename from videoArr if available
+                const fileObj = videoArr.find(v => v.quality === selectedQuality);
+                filename = fileObj ? fileObj.filename : "audio";
+            }
 
-}
-
-if (!stream) {
-  await sendQuotedMessage(from, `❌ ${selectedQuality} not available.`);
-} else if (selected <= 5) {
-    
-  await sendyt(from, msg, sock, stream.url);
-}else if (selected > 6) {
-    await sendytmp3(from, msg, sock, stream.url,filename);
-}
-
-            
-        
+            if (!stream) {
+                await sendQuotedMessage(from, `❗ ${selectedQuality} not available.`);
+            } else if (selected <= 5) {
+                await sendyt(from, msg, sock, stream.url);
+            } else if (selected >= 5) {
+                await sendytmp3(from, msg, sock, stream.url, filename);
+            }
         }
     }
 }
 
 async function sendyt(from, msg, sock, videoUrl) {
     if (!videoUrl) {
-        await sendReactMessage(from, "❌", msg, sock);
-        await sendQuotedMessage(from, "❌ Invalid video URL provided.", msg, sock);
+        await sendReactMessage(from, "❗", msg, sock);
+        await sendQuotedMessage(from, "❗ Invalid video URL provided.", msg, sock);
         return;
     }
 
@@ -172,8 +170,8 @@ async function sendyt(from, msg, sock, videoUrl) {
     });
 
     if (!videoBuffer) {
-        await sendReactMessage(from, "❌", msg, sock);
-        await sendQuotedMessage(from, "❌ Failed to download video.", msg, sock);
+        await sendReactMessage(from, "❗", msg, sock);
+        await sendQuotedMessage(from, "❗ Failed to download video.", msg, sock);
         return;
     }
 
@@ -185,7 +183,7 @@ async function sendyt(from, msg, sock, videoUrl) {
     await sock.sendMessage(from, { react: { text: "✅", key: msg.key } });
 }
 
-async function sendytmp3(from, msg, sock, audioUrl,filename) {
+async function sendytmp3(from, msg, sock, audioUrl, filename) {
     await sock.sendMessage(from, { react: { text: "⏳", key: msg.key } });
 
     const audioBuffer = await fetchBuffer(audioUrl, {
@@ -195,8 +193,15 @@ async function sendytmp3(from, msg, sock, audioUrl,filename) {
     });
 
     if (!audioBuffer) {
-        await sendReactMessage(from, "❌", msg, sock);
-        await sendQuotedMessage(from, "❌ Unable to fetch audio", msg, sock);
+         if (!retried) {
+            // Retry only once
+            again(from, msg, sock, videoInfos, true);
+        } else {
+            // After one retry, send failure message
+            await sendQuotedMessage(from, "❗ Unable to fetch video info. Please try again later.", msg, sock);
+        }
+        await sendReactMessage(from, "❗", msg, sock);
+        // await sendQuotedMessage(from, "❗ Unable to fetch audio", msg, sock);
         return;
     }
 

@@ -17,12 +17,16 @@ async function fetchBuffer(url, headers = {}) {
         return null;
     }
 }
+// function again(from, msg, sock, videoInfos) {
 
+//     tiktok(from, msg, sock, videoInfos);
+//     return;
+// }
 // Handle TikTok video command
 async function tiktok(from, msg, sock, videoInfos) {
     if (!videoInfos) {
-        await sendReactMessage(from, "❌", msg, sock);
-        await sendQuotedMessage(from, "❌ Unable to fetch video info", msg, sock);
+// again(from, msg, sock, videoInfos)
+        await sendReactMessage(from, "❗", msg, sock);
         return;
     }
 
@@ -30,8 +34,8 @@ async function tiktok(from, msg, sock, videoInfos) {
 
     const imageBuffer = await fetchBuffer(videoInfos.cover);
     if (!imageBuffer) {
-        await sendReactMessage(from, "❌", msg, sock);
-        await sendQuotedMessage(from, "❌ Unable to fetch thumbnail image", msg, sock);
+imageBuffer = await fetchBuffer('https://imageplaceholder.net/600x400/eeeeee/131313?text=Error!');
+        // await sendQuotedMessage(from, "❌ Unable to fetch thumbnail image", msg, sock);
         return;
     }
 
@@ -95,8 +99,8 @@ async function selectreq(from, msg, sock, text) {
 
 async function sendtiktok(from, msg, sock, videoUrl) {
     if (!videoUrl) {
-        await sendReactMessage(from, "❌", msg, sock);
-        await sendQuotedMessage(from, "❌ Invalid video URL provided.", msg, sock);
+        await sendReactMessage(from, "❗", msg, sock);
+        await sendQuotedMessage(from, "❗ Invalid video URL provided.", msg, sock);
         return;
     }
 
@@ -109,8 +113,8 @@ async function sendtiktok(from, msg, sock, videoUrl) {
     });
 
     if (!videoBuffer) {
-        await sendReactMessage(from, "❌", msg, sock);
-        await sendQuotedMessage(from, "❌ Failed to download video.", msg, sock);
+        await sendReactMessage(from, "❗", msg, sock);
+        await sendQuotedMessage(from, "❗ Failed to download video.", msg, sock);
         return;
     }
 
@@ -132,8 +136,8 @@ async function sendsound(from, msg, sock, audioUrl) {
     });
 
     if (!audioBuffer) {
-        await sendReactMessage(from, "❌", msg, sock);
-        await sendQuotedMessage(from, "❌ Unable to fetch audio", msg, sock);
+        await sendReactMessage(from, "❗", msg, sock);
+        await sendQuotedMessage(from, "❗ Unable to fetch audio", msg, sock);
         return;
     }
 
